@@ -72,6 +72,8 @@ Run the program:
 ```bash
 ./minishell
 ```
+> [!NOTE]
+> Additionally the executable could be moved to a directory in the $PATH to make it work from anywhere in the computer typing 'minishell', like bash.
 
 <!-- Authors -->
 ## Authors
