@@ -77,3 +77,4 @@ Run the program:
 
 <!-- Authors -->
 ## Authors
+This project is written by @AdriaPriego and me as part of 42 School core curriculum. I was mainly focused on the lexer(tokenizer), parser, and executor, while Adria focused on the built-ins, expansor, and signals.
