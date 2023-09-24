@@ -19,7 +19,7 @@
 <img width="700" alt="minishell_screenshot" src="https://github.com/ferri17/minishell/assets/19575860/82977658-8af7-4e6e-98bf-af69bb83e507">
 
 **Minishell is a Unix shell** really similar to bash but with some reduced functionalities. The project is written from scratch in C.
-Some of the features are:
+Some of the functionalities are:
 - Displays current directory when waiting for a new command.
 - Working history of commands.
 - Searches and launches the right executable (based on the PATH variable or using a
@@ -36,6 +36,23 @@ relative or an absolute path).
 - Works with pipes '|'. The output of each command in the pipeline is connected to the input of the next command via a pipe.
 - $? is updated with the exit code of the last executed command in the pipe.
 - Handles signals ctrl-C, ctrl-D and ctrl-\ which behave like in bash.
+- To finish, the following built-in commands were implemented from scratch:
+	- **echo** with option -n
+ 	- **cd** with only a relative or absolute path
+	- **pwd** with no options
+	- **export** with no options
+	- **unset** with no options
+	- **env** with no options or arguments
+	- **exit**
+> [!NOTE]
+> This project doesn't handle the following functionalities:
+> - STDERR redirection like '2>' or STDERR + STDOUT redirection like '&>'.
+> - Unclosed quotes. If quotes are left unclosed minishell will interpret there is a closing quote at the end of the command.
+> - Commands ending with a pipe character '|'. Minishell will throw a syntax error on that case.
+> - Logical operators like '&&' and '||'.
+> - Special characters like '/' and ';'.
+> - Wildcards '*'.
+
 
 <!-- GETTING STARTED -->
 ## Getting Started
