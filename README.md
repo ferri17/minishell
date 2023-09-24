@@ -10,7 +10,7 @@
 
   <p align="center">
     The aim of this project is to create a shell using bash (bourne-again shell) as reference.
-    <br />
+    <br/>
   </p>
 </div>
 
@@ -18,7 +18,24 @@
 ## About The Project
 <img width="700" alt="minishell_screenshot" src="https://github.com/ferri17/minishell/assets/19575860/82977658-8af7-4e6e-98bf-af69bb83e507">
 
-**Minishell is a Unix shell** really similar to bash but with some reduced functionalities. The project is written in C.
+**Minishell is a Unix shell** really similar to bash but with some reduced functionalities. The project is written from scratch in C.
+Some of the features are:
+- Displays current directory when waiting for a new command.
+- Working history of commands.
+- Searches and launches the right executable (based on the PATH variable or using a
+relative or an absolute path).
+- Variable expansion of environment variables, tilde characater '~' and $?.
+- Single and double quotes as bash would, single quotes prevent the shell from interpreting the metacharacters in the quoted sequence.
+- Redirections:
+	- '<' Redirects input.
+	- '\>' Redirects output.
+	- '\<<' + DELIMITER, reads the input until a line containing the
+	delimiter is seen. It doesn’t update the history.
+	- '\>>' Redirects output in append mode.
+
+- Works with pipes '|'. The output of each command in the pipeline is connected to the input of the next command via a pipe.
+- $? is updated with the exit code of the last executed command in the pipe.
+- Handles signals ctrl-C, ctrl-D and ctrl-\ which behave like in bash.
 
 <!-- GETTING STARTED -->
 ## Getting Started
