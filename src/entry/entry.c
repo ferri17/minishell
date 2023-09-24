@@ -3,14 +3,58 @@
 /*                                                        :::      ::::::::   */
 /*   entry.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fbosch <fbosch@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fbosch <fbosch@student.42barcelona.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/22 12:13:18 by apriego-          #+#    #+#             */
-/*   Updated: 2023/09/21 21:17:16 by fbosch           ###   ########.fr       */
+/*   Updated: 2023/09/24 15:28:11 by fbosch           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+/*
+	Holds Minishell loop, it's the backbone of the program. From this function
+	commands written by the user are tokenized, parsed, expanded and executed.
+	In case of error it doesn't close Minishell, instead it gives control back 
+	to the user to write a new command.
+
+	Process of a commands:
+
+	(string)Input -> Tokenizer -> Parser -> Expansor -> Executor
+
+	Example:
+
+	"echo $USER | wc -c" -> [echo] [$USER] [PIPE] [wc] [-c] ->
+	-> [args[][] = "echo", "$USER", "NULL"] - [args[][] = "wc", "-c", NULL] ->
+	-> [args[][] = "echo", "username", "NULL"] - [args[][] = "wc", "-c", NULL] ->
+	-> STDOUT: 9
+*/
+void	generate_terminal(t_env *env)
+{
+	int		exit_s;
+	t_cmd	*cmd;
+	char	*str;
+
+	exit_s = 0;
+	str = generate_entry(env);
+	while (str)
+	{
+		add_history(str);
+		if (string_to_command(str, &cmd, env, &exit_s) == 0 && cmd != NULL)
+		{
+			init_signals(CHILDS);
+			if (execute_commands(cmd, env, &exit_s) == 1)
+				ft_printf_fd(STDERR_FILENO, MSSG_EXECUTOR_ERROR);
+			init_signals(DEFAULT);
+		}
+		parser_lstclear(&cmd);
+		free(str);
+		str = generate_entry(env);
+	}
+	ft_matrix_free(env->env);
+	ft_matrix_free(env->export);
+	exit(exit_s);
+}
 
 char	*ft_joincolors(char *array)
 {
@@ -82,31 +126,4 @@ int	string_to_command(char *str, t_cmd **commands, t_env *env, int *exit_s)
 		ft_printf_fd(STDERR_FILENO, MSSG_MEMORY_ERROR);
 	lexer_lstclear(&lexer);
 	return (status);
-}
-
-void	generate_terminal(t_env *env)
-{
-	int		exit_s;
-	t_cmd	*cmd;
-	char	*str;
-
-	exit_s = 0;
-	str = generate_entry(env);
-	while (str)
-	{
-		add_history(str);
-		if (string_to_command(str, &cmd, env, &exit_s) == 0 && cmd != NULL)
-		{
-			init_signals(CHILDS);
-			if (execute_commands(cmd, env, &exit_s) == 1)
-				ft_printf_fd(STDERR_FILENO, MSSG_EXECUTOR_ERROR);
-			init_signals(DEFAULT);
-		}
-		parser_lstclear(&cmd);
-		free(str);
-		str = generate_entry(env);
-	}
-	ft_matrix_free(env->env);
-	ft_matrix_free(env->export);
-	exit(exit_s);
 }

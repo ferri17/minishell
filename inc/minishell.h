@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apriego- <apriego-@student.42barcel>       +#+  +:+       +#+        */
+/*   By: fbosch <fbosch@student.42barcelona.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 13:55:12 by apriego-          #+#    #+#             */
-/*   Updated: 2023/09/22 11:20:08 by apriego-         ###   ########.fr       */
+/*   Updated: 2023/09/24 15:42:42 by fbosch           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,8 +193,9 @@ int		heredoc(t_cmd *commands);
 // Converts input string to tokens for minishell to interpret
 /*-----------------------------		TOKENIZER	----------------------------*/
 int		tokenizer(char *str, t_lex **lexer);
+int		initialize_lexer_node(t_lex *new, char *str, int i);
 int		create_word(char *str, int i, t_lex *new);
-int		create_token(char *str, int i, t_lex *lexer);
+int		create_token(char *str, int i, t_lex *new);
 int		ft_isspace(int c);
 int		ft_isquote(int c);
 int		ft_isreserved(int c);

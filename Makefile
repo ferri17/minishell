@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: apriego- <apriego-@student.42barcel>       +#+  +:+       +#+         #
+#    By: fbosch <fbosch@student.42barcelona.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/08/14 11:57:58 by apriego-          #+#    #+#              #
-#    Updated: 2023/09/22 11:25:01 by apriego-         ###   ########.fr        #
+#    Updated: 2023/09/24 13:59:33 by fbosch           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,6 +80,7 @@ LIB_ADD_DIR	:=	-L$(RDLINE_ROOT) -L$(LIBFT_ROOT)
 LIB_SEARCH	:=	-lreadline -lhistory -ltermcap -lft
 
 #=================HEADERS==================#
+
 HEADERS		:=	$(INC_ROOT)
 HEADERS		+=	$(addsuffix $(INC_ROOT),$(LIBFT_ROOT))
 

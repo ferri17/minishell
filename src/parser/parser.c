@@ -3,14 +3,45 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apriego- <apriego-@student.42barcel>       +#+  +:+       +#+        */
+/*   By: fbosch <fbosch@student.42barcelona.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 22:38:29 by fbosch            #+#    #+#             */
-/*   Updated: 2023/09/18 12:13:29 by apriego-         ###   ########.fr       */
+/*   Updated: 2023/09/24 15:38:49 by fbosch           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+	The parser is in charge of converting a list of tokens into a functional
+	list of commands that is easy to iterate and understand for the executor.
+
+	Commands are saved in a char** NULL terminated array to be easily used by
+	execve(), redirections are saved in a new linked list to be treated 
+	independently, and pipes are completely removed as they are implicit 
+	between each node of simple commands (t_cmd).
+*/
+int	parser(t_cmd **commands, t_lex **lexer, int *exit_s)
+{
+	t_cmd	*new;
+	t_lex	*head;
+
+	if (!lexer)
+		return (0);
+	if (check_syntax_error(*lexer, exit_s) == SYNTAX_ERR)
+		return (lexer_lstclear(lexer), SYNTAX_ERR);
+	head = *lexer;
+	while (head)
+	{
+		new = parser_lstnew();
+		if (!new)
+			return (1);
+		parser_lstadd_back(commands, new);
+		if (create_simple_command(&head, new) == 1)
+			return (1);
+	}
+	return (0);
+}
 
 int	count_arguments(t_lex *lexer)
 {
@@ -99,27 +130,5 @@ int	create_simple_command(t_lex **head, t_cmd *cmd)
 		return (1);
 	if (*head && (*head)->token == PIPE)
 		*head = (*head)->next;
-	return (0);
-}
-
-int	parser(t_cmd **commands, t_lex **lexer, int *exit_s)
-{
-	t_cmd	*new;
-	t_lex	*head;
-
-	if (!lexer)
-		return (0);
-	if (check_syntax_error(*lexer, exit_s) == SYNTAX_ERR)
-		return (lexer_lstclear(lexer), SYNTAX_ERR);
-	head = *lexer;
-	while (head)
-	{
-		new = parser_lstnew();
-		if (!new)
-			return (1);
-		parser_lstadd_back(commands, new);
-		if (create_simple_command(&head, new) == 1)
-			return (1);
-	}
 	return (0);
 }

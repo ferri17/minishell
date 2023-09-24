@@ -3,14 +3,47 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apriego- <apriego-@student.42barcel>       +#+  +:+       +#+        */
+/*   By: fbosch <fbosch@student.42barcelona.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 13:16:48 by apriego-          #+#    #+#             */
-/*   Updated: 2023/09/07 13:46:30 by apriego-         ###   ########.fr       */
+/*   Updated: 2023/09/24 15:42:25 by fbosch           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+/*	
+	This function receives the input given on the terminal as a string
+	and it creates a linked list of tokens, the tokens will be used
+	to process the commands in a simpler way by the parser.
+	Example:
+
+	Input -> "ls -l | wc -c > outfile"
+	Output -> linked_list {ls, -l, PIPE, wc, -c, GREAT, outfile}
+*/
+int	tokenizer(char *str, t_lex **lexer)
+{
+	t_lex	*new;
+	int		i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isspace(str[i]))
+		{
+			new = lexer_lstnew();
+			if (!new)
+				return (1);
+			lexer_lstadd_back(lexer, new);
+			i = initialize_lexer_node(new, str, i);
+			if (i == -1)
+				return (1);
+		}
+		else
+			i++;
+	}
+	return (0);
+}
 
 int	create_token(char *str, int i, t_lex *new)
 {
@@ -73,36 +106,4 @@ int	initialize_lexer_node(t_lex *new, char *str, int i)
 		i += temp;
 	}
 	return (i);
-}
-
-/*	This function receives the input given on the terminal as a string
-	and it creates a linked list of tokens, the tokens will be used
-	to process the commands in a simpler way by the parser.
-	Example:
-
-	Input -> "ls -l | wc -c > outfile"
-	Output -> linked_list {ls, -l, PIPE, wc, -c, GREAT, outfile}
-*/
-int	tokenizer(char *str, t_lex **lexer)
-{
-	t_lex	*new;
-	int		i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (!ft_isspace(str[i]))
-		{
-			new = lexer_lstnew();
-			if (!new)
-				return (1);
-			lexer_lstadd_back(lexer, new);
-			i = initialize_lexer_node(new, str, i);
-			if (i == -1)
-				return (1);
-		}
-		else
-			i++;
-	}
-	return (0);
 }

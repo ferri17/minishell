@@ -3,14 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fbosch <fbosch@student.42.fr>              +#+  +:+       +#+        */
+/*   By: fbosch <fbosch@student.42barcelona.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/11 01:12:21 by fbosch            #+#    #+#             */
-/*   Updated: 2023/09/21 11:58:36 by fbosch           ###   ########.fr       */
+/*   Updated: 2023/09/24 15:12:45 by fbosch           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+/*
+	Iterates through redirection list [t_io] and redirects STDIN and STDOUT
+	to the correct files. It also manages all file errors, wrong permissions,
+	nonexistent files, directories...
+*/
+int	manage_redirections(t_cmd *commands, t_pipe *data, int out)
+{
+	t_io	*temp;
+
+	if (commands->next != NULL)
+		dup2(data->fd[1], STDOUT_FILENO);
+	close_pipe(data->fd[0], data->fd[1]);
+	temp = commands->redirect;
+	while (temp)
+	{
+		if (dup_custom_redirections(data, temp) == 1)
+		{
+			unlink_heredocs(commands->redirect);
+			if (out == FT_RETURN)
+				return (perror_return(data, 1, temp->file));
+			else
+				perror_exit(data, EXIT_FAILURE, temp->file);
+		}
+		temp = temp->next;
+	}
+	unlink_heredocs(commands->redirect);
+	return (0);
+}
 
 void	unlink_heredocs(t_io *redirection)
 {
@@ -52,29 +81,5 @@ int	dup_custom_redirections(t_pipe *data, t_io *temp)
 		dup2(data->fd_out, STDOUT_FILENO);
 		close(data->fd_out);
 	}
-	return (0);
-}
-
-int	manage_redirections(t_cmd *commands, t_pipe *data, int out)
-{
-	t_io	*temp;
-
-	if (commands->next != NULL)
-		dup2(data->fd[1], STDOUT_FILENO);
-	close_pipe(data->fd[0], data->fd[1]);
-	temp = commands->redirect;
-	while (temp)
-	{
-		if (dup_custom_redirections(data, temp) == 1)
-		{
-			unlink_heredocs(commands->redirect);
-			if (out == FT_RETURN)
-				return (perror_return(data, 1, temp->file));
-			else
-				perror_exit(data, EXIT_FAILURE, temp->file);
-		}
-		temp = temp->next;
-	}
-	unlink_heredocs(commands->redirect);
 	return (0);
 }
