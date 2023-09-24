@@ -6,7 +6,7 @@
 /*   By: fbosch <fbosch@student.42barcelona.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/14 13:55:12 by apriego-          #+#    #+#             */
-/*   Updated: 2023/09/24 15:42:42 by fbosch           ###   ########.fr       */
+/*   Updated: 2023/09/24 17:08:03 by fbosch           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ void	lexer_lstclear(t_lex **lst);
 int		lexer_lstsize(t_lex *lst);
 t_lex	*lexer_lstlast(t_lex *lst);
 
-// Reads from lexer structure and expands variables
+// Reads from parser structure and expands variables
 /*------------------------------  EXPANSOR  ------------------------------*/
 
 int		expansor(t_cmd *def, char **env, int status);
@@ -234,7 +234,7 @@ int		check_dollar(char *word, int i);
 int		ft_change_redirection(t_io *redirect, char *str);
 int		expand_redirections(t_io *redir, char **env, int ex_s);
 
-// Converts token list (lexer) into a simple arguments list
+// Converts token list (lexer) into a simple commands list
 /*---------------------------- 	PARSER	-------------------------------*/
 int		parser(t_cmd **commands, t_lex **lexer, int *exit_s);
 int		create_simple_command(t_lex **head, t_cmd *cmd);
